@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Result - AI Medical Tool{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 40px;
+        text-align: center;
+    }
+    .result-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .result-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #00b4d8, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+    .score-display-large {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #00b4d8;
+        margin: 20px 0;
+    }
+    .percentage-display {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #4ecdc4;
+        margin: 10px 0;
+    }
+    .comment-text {
+        font-size: 1.3rem;
+        color: #ffd60a;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-card">
+        <h1 class="result-title">🏅 Quiz Complete!</h1>
+        <div style="font-size: 1.5rem; color: #4ecdc4; margin-bottom: 20px;">
+            Congratulations, {{ user_name }}!
+        </div>
+        <div class="score-display-large">{{ score }} / {{ total }}</div>
+        <div class="percentage-display">{{ percentage }}%</div>
+        <div class="comment-text">{{ comment }}</div>
+        
+        <div class="action-buttons">
+            <a href="{{ url_for('training') }}" class="btn btn-secondary">🏠 Dashboard</a>
+            <a href="{{ url_for('quiz_levels') }}" class="btn">🔄 Restart Quiz</a>
+            <a href="{{ url_for('training_progress') }}" class="btn">📊 My Progress</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

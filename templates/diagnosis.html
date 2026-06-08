@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Diagnosis Mode - AI Medical Tool{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 20px;">
+    <h1 style="color: #00ffd5; font-size: 2.5rem; margin-bottom: 30px;">🩺 Diagnosis Mode</h1>
+    
+    <div style="margin-bottom: 30px;">
+        <a href="{{ url_for('mode_selection') }}" class="btn btn-secondary" style="margin-right: 10px;">⬅ Back</a>
+        <a href="{{ url_for('diagnosis') }}?view_history=1" class="btn">📜 View Patients History</a>
+    </div>
+    
+    {% if request.args.get('view_history') %}
+    <div style="background: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 20px; margin: 20px 0;">
+        <h2 style="color: white; margin-bottom: 20px;">📋 Previous Patient Records</h2>
+        {% if records %}
+        <table style="width: 100%; color: white; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(0, 255, 213, 0.5);">
+                    <th style="padding: 10px; text-align: left;">Patient Name</th>
+                    <th style="padding: 10px; text-align: left;">Disease</th>
+                    <th style="padding: 10px; text-align: left;">Gender</th>
+                    <th style="padding: 10px; text-align: left;">Phone</th>
+                    <th style="padding: 10px; text-align: left;">Symptoms</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                    <td style="padding: 10px;">{{ record[0] }} {{ record[1] }}</td>
+                    <td style="padding: 10px;">{{ record[6] }}</td>
+                    <td style="padding: 10px;">{{ record[4] }}</td>
+                    <td style="padding: 10px;">{{ record[2] }}</td>
+                    <td style="padding: 10px;">{{ record[5][:50] }}...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: white;">No previous records found.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <div style="background: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 40px; max-width: 800px; margin: 40px auto;">
+        <h2 style="color: white; margin-bottom: 30px;">Select Disease</h2>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('diagnosis_diabetes') }}" class="btn" style="min-width: 200px; padding: 20px; font-size: 1.2rem;">🍬 Diabetes</a>
+            <a href="{{ url_for('diagnosis_bp') }}" class="btn" style="min-width: 200px; padding: 20px; font-size: 1.2rem;">🫀 Blood Pressure</a>
+            <a href="{{ url_for('diagnosis_lung') }}" class="btn" style="min-width: 200px; padding: 20px; font-size: 1.2rem;">🫁 Lung Cancer</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Diabetes Diagnosis - AI Medical Tool{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 20px auto; padding: 20px;">
+    <h1 style="color: #00ffd5; text-align: center; margin-bottom: 20px;">🍬 Diabetes Risk Assessment</h1>
+    
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('diagnosis') }}" class="btn btn-secondary">⬅ Back</a>
+    </div>
+    
+    {% if result %}
+    <div style="background: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
+        <h2 style="color: white; margin-bottom: 20px;">📊 Diabetes Risk Assessment Results</h2>
+        {% if result.lower() == "low" %}
+        <div style="background: rgba(76, 175, 80, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #4caf50;">✅ Low Risk of Diabetes {% if confidence %}(Confidence: {{ "%.2f"|format(confidence) }}%){% endif %}</h3>
+            <div style="color: white; margin-top: 15px;">
+                <h4>Recommendations:</h4>
+                <ul>
+                    <li>Continue maintaining a healthy lifestyle</li>
+                    <li>Regular check-ups every 1-2 years</li>
+                    <li>Stay physically active and maintain a balanced diet</li>
+                </ul>
+            </div>
+        </div>
+        {% elif result.lower() == "medium" %}
+        <div style="background: rgba(255, 152, 0, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #ff9800;">⚠ Medium Risk of Diabetes {% if confidence %}(Confidence: {{ "%.2f"|format(confidence) }}%){% endif %}</h3>
+            <div style="color: white; margin-top: 15px;">
+                <h4>Recommendations:</h4>
+                <ul>
+                    <li>Consider consulting with a healthcare provider</li>
+                    <li>Increase physical activity to at least 150 minutes per week</li>
+                    <li>Reduce consumption of processed foods and sugary drinks</li>
+                    <li>Monitor your blood glucose levels periodically</li>
+                </ul>
+            </div>
+        </div>
+        {% else %}
+        <div style="background: rgba(244, 67, 54, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #f44336;">🚨 High Risk of Diabetes {% if confidence %}(Confidence: {{ "%.2f"|format(confidence) }}%){% endif %}</h3>
+            <div style="color: white; margin-top: 15px;">
+                <h4>Recommendations:</h4>
+                <ul>
+                    <li>Schedule an appointment with a healthcare provider soon</li>
+                    <li>Consider getting tested for diabetes or prediabetes</li>
+                    <li>Work with healthcare professionals to develop a risk reduction plan</li>
+                    <li>Make significant lifestyle changes including diet and exercise</li>
+                    <li>Regular monitoring of blood glucose levels</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if bmi and bmi_category %}
+        <div style="background: rgba(0, 180, 216, 0.3); padding: 15px; border-radius: 10px; margin-top: 15px;">
+            <p style="color: white;">Your BMI is {{ "%.2f"|format(bmi) }} which is classified as '{{ bmi_category }}'</p>
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('save_diabetes_record') }}" style="margin-top: 20px;">
+            <button type="submit" class="btn">🧾 Save to Patient History</button>
+        </form>
+    </div>
+    {% endif %}
+    
+    <div style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(15px); border-radius: 25px; padding: 40px; border: 3px solid rgba(0, 255, 213, 0.8);">
+        <form method="POST" action="{{ url_for('diagnosis_diabetes') }}">
+            <h2 style="color: white; margin-bottom: 20px;">🧍 Patient Details</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">First Name</label>
+                    <input type="text" name="first_name" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Last Name</label>
+                    <input type="text" name="last_name" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Phone Number</label>
+                <input type="text" name="phone" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+            </div>
+            
+            <h2 style="color: white; margin-bottom: 20px;">🩸 Diabetes Risk Factors</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Age</label>
+                    <input type="number" name="age" min="18" max="100" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Gender</label>
+                    <select name="gender" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Family History of Diabetes</label>
+                <select name="family_history" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <h3 style="color: white; margin-bottom: 15px;">📏 BMI Information</h3>
+            <div style="margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 10px;">Do you know your BMI?</label>
+                <div style="display: flex; gap: 20px;">
+                    <label style="color: white;"><input type="radio" name="bmi_known" value="yes" onclick="toggleBMIInput(true)" required> Yes</label>
+                    <label style="color: white;"><input type="radio" name="bmi_known" value="no" onclick="toggleBMIInput(false)" required> No</label>
+                </div>
+            </div>
+            
+            <div id="bmi-input" style="display: none; margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Enter your BMI</label>
+                <input type="number" name="bmi" step="0.1" min="10" max="50" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+            </div>
+            
+            <div id="weight-height-input" style="display: none; margin-bottom: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <div>
+                        <label style="color: white; display: block; margin-bottom: 5px;">Weight (kg)</label>
+                        <input type="number" name="weight" step="0.1" min="20" max="300" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                    </div>
+                    <div>
+                        <label style="color: white; display: block; margin-bottom: 5px;">Height (cm)</label>
+                        <input type="number" name="height" step="0.1" min="50" max="250" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="color: white; margin-bottom: 15px;">🏃‍♂ Lifestyle Factors</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Physical Activity</label>
+                    <select name="physical_activity" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Daily">Daily</option>
+                        <option value="Few times/week">Few times/week</option>
+                        <option value="Rarely">Rarely</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Diet Quality</label>
+                    <select name="diet_quality" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Healthy">Healthy</option>
+                        <option value="Average">Average</option>
+                        <option value="Unhealthy">Unhealthy</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Do you smoke?</label>
+                <select name="smoking" id="smoking-select" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <div id="alcohol-input" style="margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Do you consume alcohol regularly?</label>
+                <select name="alcohol" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Sleep Hours (per night)</label>
+                    <input type="number" name="sleep_hours" step="0.1" min="3" max="12" value="7" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Stress Level</label>
+                    <select name="stress_level" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Low">Low</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+            </div>
+            
+            <h3 style="color: white; margin-bottom: 15px;">🩺 Symptoms</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Frequent Urination</label>
+                    <select name="frequent_urination" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Excessive Thirst</label>
+                    <select name="excessive_thirst" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Tiredness</label>
+                    <select name="tiredness" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Blurred Vision</label>
+                    <select name="blurred_vision" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Slow Healing</label>
+                    <select name="slow_healing" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Dark Skin Patches</label>
+                    <select name="dark_skin_patches" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Frequent Infections</label>
+                    <select name="frequent_infections" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem;">Predict Diabetes Risk</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleBMIInput(known) {
+    document.getElementById('bmi-input').style.display = known ? 'block' : 'none';
+    document.getElementById('weight-height-input').style.display = known ? 'none' : 'block';
+    if (!known) {
+        document.querySelector('input[name="bmi"]').value = '';
+    } else {
+        document.querySelector('input[name="weight"]').value = '';
+        document.querySelector('input[name="height"]').value = '';
+    }
+}
+
+document.getElementById('smoking-select').addEventListener('change', function() {
+    if (this.value === 'Yes') {
+        document.getElementById('alcohol-input').style.display = 'block';
+    } else {
+        document.getElementById('alcohol-input').style.display = 'none';
+        document.querySelector('select[name="alcohol"]').value = 'No';
+    }
+});
+
+// Initialize alcohol input visibility
+if (document.getElementById('smoking-select').value === 'No') {
+    document.getElementById('alcohol-input').style.display = 'none';
+}
+</script>
+{% endblock %}
+

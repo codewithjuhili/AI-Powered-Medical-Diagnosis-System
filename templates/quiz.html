@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz - AI Medical Tool{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+    .quiz-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #00b4d8, #ff6b6b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .score-display {
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-weight: 600;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 20px 0;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(45deg, #00b4d8, #4ecdc4);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+        width: {{ progress }}%;
+    }
+    .question-card {
+        background: linear-gradient(145deg, #2d1b69, #1a0d3a);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .question-text {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 20px;
+    }
+    .option-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    .option-container:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(0, 180, 216, 0.5);
+    }
+    .feedback {
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        font-weight: 600;
+    }
+    .feedback-correct {
+        background: linear-gradient(145deg, #4caf50, #2e7d32);
+        color: white;
+    }
+    .feedback-wrong {
+        background: linear-gradient(145deg, #f44336, #c62828);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div class="quiz-header">
+        <div class="quiz-title">🧩 {{ difficulty.capitalize() }} Level Quiz</div>
+        <div class="score-display">Score: {{ score }}</div>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+    
+    {% if last_result %}
+    <div class="feedback {% if last_result.correct %}feedback-correct{% else %}feedback-wrong{% endif %}">
+        {% if last_result.correct %}
+        ✅ Correct! Answer: {{ last_result.correct_answer }}
+        {% else %}
+        ❌ Wrong! Correct Answer: {{ last_result.correct_answer }}
+        {% endif %}
+    </div>
+    
+    <div style="background: rgba(33, 150, 243, 0.3); padding: 15px; border-radius: 10px; margin: 15px 0;">
+        <p style="color: white; margin: 5px 0;">💊 Drug: {{ last_result.question.Drug }}</p>
+        <p style="color: white; margin: 5px 0;">📝 Explanation: {{ last_result.question.Explanation }}</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('quiz') }}" style="margin-top: 20px;">
+        <input type="hidden" name="action" value="next_question">
+        <button type="submit" class="btn" style="width: 100%;">
+            {% if is_last %}End Quiz & Show Results{% else %}Next Question{% endif %}
+        </button>
+    </form>
+    {% elif not submitted %}
+    <div class="question-card">
+        <div class="question-text">Q{{ current_q + 1 }}: {{ question.Question }}</div>
+    </div>
+    
+    <form method="POST" action="{{ url_for('quiz') }}" id="answer-form">
+        <input type="hidden" name="action" value="submit_answer">
+        {% for option in options %}
+        <div class="option-container">
+            <label style="color: white; cursor: pointer; display: block;">
+                <input type="radio" name="user_choice" value="{{ option }}" required style="margin-right: 10px;">
+                {{ option }}
+            </label>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">Submit Answer</button>
+    </form>
+    {% endif %}
+    
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('training') }}" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+</div>
+{% endblock %}
+

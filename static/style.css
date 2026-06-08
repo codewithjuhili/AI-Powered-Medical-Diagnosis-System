@@ -1,0 +1,262 @@
+/* =============================
+   Navy + Neon Lime Glow Theme
+   ============================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --indigo: #1A237E;
+  --indigo-2: #0F1548;
+  --black: #000000;
+  --lime: #C6FF00;
+  --lime-soft: rgba(198, 255, 0, 0.45);
+  --lime-strong: rgba(198, 255, 0, 0.9);
+  --text: #ECEFF1;
+  --white: #FFFFFF;
+  --card-bg: rgba(13, 13, 18, 0.55);
+  --glass: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.15);
+}
+
+/* Base layout */
+html, body { height: 100%; }
+
+body {
+  font-family: 'Poppins', sans-serif !important;
+  color: var(--text) !important;
+  background: radial-gradient(1200px circle at 20% 10%, rgba(198,255,0,0.08), transparent 40%),
+              linear-gradient(180deg, var(--indigo), #0A0A0A) fixed !important;
+  margin: 0 !important;
+  min-height: 100vh !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(800px circle at 80% 20%, rgba(198,255,0,0.06), transparent 40%),
+    radial-gradient(600px circle at 10% 80%, rgba(198,255,0,0.06), transparent 45%);
+  filter: blur(8px);
+  z-index: -1;
+  animation: ambientGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes ambientGlow {
+  0% { filter: blur(6px) brightness(0.95); }
+  50% { filter: blur(10px) brightness(1.1); }
+  100% { filter: blur(8px) brightness(1.0); }
+}
+
+/* Containers */
+.container {
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  padding: 24px !important;
+  position: relative !important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--white) !important;
+  letter-spacing: 0.3px;
+}
+
+h1 {
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(198,255,0,0.25);
+}
+
+h2, h3 { font-weight: 600; }
+
+/* Links */
+a { color: var(--lime) !important; text-decoration: none; }
+a:hover { filter: drop-shadow(0 0 6px var(--lime-soft)); }
+
+/* Buttons */
+.btn {
+  --btn-bg: linear-gradient(135deg, #121639, #0A0C22);
+  background: var(--btn-bg) !important;
+  color: var(--white) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 12px 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 0 0 0 rgba(198,255,0,0) !important;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  background: radial-gradient(600px circle at 50% -20%, var(--lime-soft), transparent 26%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--lime-soft) !important;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.35), 0 0 18px var(--lime-soft) !important;
+}
+
+.btn:hover::after { opacity: 1; }
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #1B213F, #101327) !important;
+  color: var(--text) !important;
+}
+
+/* Inputs and forms */
+input, select, textarea {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--white) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  outline: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.1s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--lime-strong) !important;
+  box-shadow: 0 0 0 3px rgba(198,255,0,0.25) !important;
+}
+
+label { color: var(--text) !important; font-weight: 500; }
+
+/* Cards */
+.dashboard-card, .question-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)) !important;
+  border-radius: 18px !important;
+  padding: 24px !important;
+  border: 1px solid var(--border) !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25) !important;
+  transition: transform 0.25s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+.dashboard-card:hover, .question-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--lime-soft) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 24px var(--lime-soft) !important;
+}
+
+/* Images inside cards */
+.dashboard-card img {
+  border-radius: 14px !important;
+  width: 100% !important;
+  height: 200px !important;
+  object-fit: cover !important;
+  filter: drop-shadow(0 0 6px rgba(198,255,0,0.25));
+}
+
+/* Mode selection headings and text */
+h1, h2 {
+  background: linear-gradient(90deg, var(--white), var(--text)) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Quiz specific */
+.quiz-container { max-width: 950px !important; }
+
+.quiz-header {
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04)) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px !important;
+}
+
+.quiz-title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  background: linear-gradient(45deg, var(--lime), #9EEA00) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: 0 0 12px rgba(198,255,0,0.35);
+}
+
+.score-display {
+  background: linear-gradient(135deg, #1B213F, #101327) !important;
+  border: 1px solid var(--lime-soft) !important;
+  color: var(--white) !important;
+  border-radius: 14px !important;
+}
+
+.progress-bar {
+  background: rgba(255,255,255,0.12) !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, var(--indigo), var(--lime)) !important;
+  box-shadow: 0 0 12px var(--lime-soft) !important;
+}
+
+/* Quiz options */
+.option-container {
+  background: rgba(255,255,255,0.06) !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border) !important;
+  transition: transform 0.2s ease, border-color 0.25s ease, box-shadow 0.3s ease !important;
+}
+
+.option-container:hover {
+  transform: translateY(-2px);
+  border-color: var(--lime-soft) !important;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25), 0 0 12px var(--lime-soft) !important;
+}
+
+.feedback { border-radius: 12px !important; }
+
+.feedback-correct {
+  background: linear-gradient(145deg, rgba(198,255,0,0.25), rgba(198,255,0,0.15)) !important;
+  color: var(--white) !important;
+  border: 1px solid var(--lime-soft) !important;
+}
+
+.feedback-wrong {
+  background: linear-gradient(145deg, rgba(255,70,70,0.28), rgba(255,70,70,0.18)) !important;
+  color: var(--white) !important;
+  border: 1px solid rgba(255,70,70,0.45) !important;
+}
+
+/* Auth tabs (login/signup) */
+#login-tab, #signup-tab {
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--white) !important;
+  border-radius: 12px 12px 0 0 !important;
+  border: 1px solid var(--border) !important;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#login-tab:hover, #signup-tab:hover { transform: translateY(-1px); }
+
+#login-tab.active, #signup-tab.active {
+  background: rgba(198,255,0,0.25) !important;
+  border-color: var(--lime-soft) !important;
+}
+
+/* Utility spacing */
+.mt-2 { margin-top: 8px !important; }
+.mt-3 { margin-top: 12px !important; }
+.mt-4 { margin-top: 18px !important; }
+.mb-2 { margin-bottom: 8px !important; }
+.mb-3 { margin-bottom: 12px !important; }
+.mb-4 { margin-bottom: 18px !important; }
+
+/* Remove older Streamlit-specific styles if present */
+.stApp, [data-testid="stHorizontalBlock"], [data-testid="stImage"] { all: unset; }

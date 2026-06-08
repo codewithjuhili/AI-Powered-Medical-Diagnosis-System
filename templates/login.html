@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Login - AI Medical Tool{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 100px auto;">
+    <div style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(14px); border-radius: 20px; padding: 40px 50px; border: 2px solid rgba(255,255,255,0.15); box-shadow: 0 12px 28px rgba(0,0,0,0.35);">
+        <h1 style="text-align: center; color: #C6FF00; margin-bottom: 30px;">AI Medical Tool</h1>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid rgba(198, 255, 0, 0.35);">
+            <button onclick="showTab('login')" id="login-tab" style="flex: 1; background: rgba(198, 255, 0, 0.25); color: white; border: none; padding: 15px; border-radius: 15px 15px 0 0; cursor: pointer; font-weight: 600;">🔑 Login</button>
+            <button onclick="showTab('signup')" id="signup-tab" style="flex: 1; background: rgba(255, 255, 255, 0.08); color: white; border: none; padding: 15px; border-radius: 15px 15px 0 0; cursor: pointer; font-weight: 600;">📝 Signup</button>
+        </div>
+        
+        <!-- Login Form -->
+        <div id="login-form" style="display: block;">
+            <h2 style="color: white; margin-bottom: 20px;">Welcome Back!</h2>
+            <form method="POST" action="{{ url_for('login') }}">
+                <input type="hidden" name="login" value="1">
+                <div style="margin-bottom: 20px;">
+                    <label style="color: white; display: block; margin-bottom: 8px;">Email</label>
+                    <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="color: white; display: block; margin-bottom: 8px;">Password</label>
+                    <input type="password" name="password" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Sign In</button>
+            </form>
+        </div>
+        
+        <!-- Signup Form -->
+        <div id="signup-form" style="display: none;">
+            <h2 style="color: white; margin-bottom: 20px;">Create Account</h2>
+            <form method="POST" action="{{ url_for('login') }}">
+                <input type="hidden" name="signup" value="1">
+                <div style="margin-bottom: 20px;">
+                    <label style="color: white; display: block; margin-bottom: 8px;">Name</label>
+                    <input type="text" name="name" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="color: white; display: block; margin-bottom: 8px;">Email</label>
+                    <input type="email" name="email" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="color: white; display: block; margin-bottom: 8px;">Password</label>
+                    <input type="password" name="password" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(tab) {
+    if (tab === 'login') {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-tab').style.background = 'rgba(198, 255, 0, 0.25)';
+        document.getElementById('signup-tab').style.background = 'rgba(255, 255, 255, 0.08)';
+    } else {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+        document.getElementById('signup-tab').style.background = 'rgba(198, 255, 0, 0.25)';
+        document.getElementById('login-tab').style.background = 'rgba(255, 255, 255, 0.08)';
+    }
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Levels - AI Medical Tool{% endblock %}
+
+{% block extra_css %}
+<style>
+    .levels-container {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .levels-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #00b4d8, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+    .levels-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 40px;
+    }
+    .level-cards {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+    .level-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        border-radius: 20px;
+        padding: 25px;
+        min-width: 250px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+    }
+    .level-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(0, 180, 216, 0.5);
+    }
+    .level-card img {
+        border-radius: 15px;
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+    .difficulty-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: white;
+    }
+    .easy-badge { background: rgba(76, 175, 80, 0.9); }
+    .moderate-badge { background: rgba(255, 152, 0, 0.9); }
+    .hard-badge { background: rgba(244, 67, 54, 0.9); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="levels-container">
+    <h1 class="levels-title">🧠 Choose Your Difficulty Level</h1>
+    <p class="levels-subtitle">Select the challenge that matches your skill level</p>
+    
+    <div class="level-cards">
+        <div class="level-card">
+            <div class="difficulty-badge easy-badge">EASY</div>
+            <img src="{{ url_for('static', filename='easy.png') }}" alt="Easy">
+            <a href="{{ url_for('quiz_name_input', difficulty='easy') }}" class="btn" style="width: 100%;">🟢 Easy</a>
+        </div>
+        
+        <div class="level-card">
+            <div class="difficulty-badge moderate-badge">MODERATE</div>
+            <img src="{{ url_for('static', filename='moderate.png') }}" alt="Moderate">
+            <a href="{{ url_for('quiz_name_input', difficulty='moderate') }}" class="btn" style="width: 100%;">🟡 Moderate</a>
+        </div>
+        
+        <div class="level-card">
+            <div class="difficulty-badge hard-badge">HARD</div>
+            <img src="{{ url_for('static', filename='hard.png') }}" alt="Hard">
+            <a href="{{ url_for('quiz_name_input', difficulty='hard') }}" class="btn" style="width: 100%;">🔴 Hard</a>
+        </div>
+    </div>
+    
+    <div style="margin-top: 40px;">
+        <a href="{{ url_for('training') }}" class="btn btn-secondary">🏠 Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
+

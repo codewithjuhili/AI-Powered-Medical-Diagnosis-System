@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Lung Cancer Diagnosis - AI Medical Tool{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 20px auto; padding: 20px;">
+    <h1 style="color: #00ffd5; text-align: center; margin-bottom: 20px;">🫁 Lung Cancer Risk Assessment</h1>
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('diagnosis') }}" class="btn btn-secondary">⬅ Back</a>
+    </div>
+    
+    {% if result %}
+    <div style="background: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
+        <h2 style="color: white; margin-bottom: 20px;">📊 Lung Cancer Risk Assessment Results</h2>
+        {% if result == "High Risk" %}
+        <div style="background: rgba(244, 67, 54, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #f44336;">⚠ High Risk of Lung Cancer</h3>
+            {% if confidence %}<p style="color: white; margin-top: 10px;">Confidence: {{ "%.2f"|format(confidence) }}%</p>{% endif %}
+        </div>
+        {% elif result == "Medium Risk" %}
+        <div style="background: rgba(255, 152, 0, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #ff9800;">⚡ Medium Risk of Lung Cancer</h3>
+            {% if confidence %}<p style="color: white; margin-top: 10px;">Confidence: {{ "%.2f"|format(confidence) }}%</p>{% endif %}
+        </div>
+        {% else %}
+        <div style="background: rgba(76, 175, 80, 0.3); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h3 style="color: #4caf50;">✅ Low Risk of Lung Cancer</h3>
+            {% if confidence %}<p style="color: white; margin-top: 10px;">Confidence: {{ "%.2f"|format(confidence) }}%</p>{% endif %}
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('save_lung_record') }}" style="margin-top: 20px;">
+            <button type="submit" class="btn">🧾 Save to Patient History</button>
+        </form>
+    </div>
+    {% endif %}
+    
+    <div style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(15px); border-radius: 25px; padding: 40px; border: 3px solid rgba(0, 255, 213, 0.8);">
+        <form method="POST" action="{{ url_for('diagnosis_lung') }}">
+            <h2 style="color: white; margin-bottom: 20px;">🧍 Patient Details</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">First Name</label>
+                    <input type="text" name="first_name" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Last Name</label>
+                    <input type="text" name="last_name" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Phone Number</label>
+                <input type="text" name="phone" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+            </div>
+            
+            <h2 style="color: white; margin-bottom: 20px;">🫁 Lung Cancer Risk Factors</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Age</label>
+                    <input type="number" name="age" min="0" max="120" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Gender</label>
+                    <select name="gender" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Smoking (0=None, 1=Yes, 2=Heavy)</label>
+                    <select name="smoking" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Yes</option>
+                        <option value="2">2 - Heavy</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Chronic Lung Disease</label>
+                    <select name="chronic_lung_disease" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - No</option>
+                        <option value="1">1 - Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Fatigue (0=None, 1=Mild, 2=Severe)</label>
+                    <select name="fatigue" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Mild</option>
+                        <option value="2">2 - Severe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Dust Allergy</label>
+                    <select name="dust_allergy" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - No</option>
+                        <option value="1">1 - Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Wheezing</label>
+                    <select name="wheezing" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - No</option>
+                        <option value="1">1 - Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Alcohol Use</label>
+                    <select name="alcohol_use" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - No</option>
+                        <option value="1">1 - Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Coughing of Blood (0=None, 1=Yes, 2=Severe)</label>
+                    <select name="coughing_blood" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Yes</option>
+                        <option value="2">2 - Severe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Shortness of Breath (0=None, 1=Mild, 2=Severe)</label>
+                    <select name="shortness_breath" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Mild</option>
+                        <option value="2">2 - Severe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Swallowing Difficulty</label>
+                    <select name="swallowing_difficulty" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - No</option>
+                        <option value="1">1 - Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Chest Pain (0=None, 1=Mild, 2=Severe)</label>
+                    <select name="chest_pain" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Mild</option>
+                        <option value="2">2 - Severe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Genetic Risk (0=None, 1=Low, 2=Medium, 3=High)</label>
+                    <select name="genetic_risk" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Low</option>
+                        <option value="2">2 - Medium</option>
+                        <option value="3">3 - High</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white; display: block; margin-bottom: 5px;">Weight Loss (0=None, 1=Mild, 2=Severe)</label>
+                    <select name="weight_loss" required style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.15); color: white;">
+                        <option value="0">0 - None</option>
+                        <option value="1">1 - Mild</option>
+                        <option value="2">2 - Severe</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem;">Predict Lung Cancer Risk</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

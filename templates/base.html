@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Medical Tool{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        :root {
+            --indigo: #1A237E;
+            --lime: #C6FF00;
+            --text: #ECEFF1;
+            --white: #FFFFFF;
+            --border: rgba(255,255,255,0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text);
+            background: radial-gradient(1200px circle at 20% 10%, rgba(198,255,0,0.08), transparent 40%),
+                        linear-gradient(180deg, var(--indigo), #0A0A0A) fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flash-messages { margin: 20px 0; }
+
+        .flash-message {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(6px);
+        }
+
+        .flash-success {
+            background: linear-gradient(145deg, rgba(198,255,0,0.18), rgba(198,255,0,0.10));
+            color: var(--white);
+            border-color: rgba(198,255,0,0.35);
+        }
+
+        .flash-error {
+            background: linear-gradient(145deg, rgba(244,67,54,0.25), rgba(244,67,54,0.12));
+            color: var(--white);
+            border-color: rgba(244,67,54,0.45);
+        }
+
+        .flash-warning {
+            background: linear-gradient(145deg, rgba(255,152,0,0.25), rgba(255,152,0,0.12));
+            color: var(--white);
+            border-color: rgba(255,152,0,0.45);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #121639, #0A0C22);
+            color: var(--white);
+            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 22px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(198,255,0,0.45);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.35), 0 0 18px rgba(198,255,0,0.35);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #1B213F, #101327);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
